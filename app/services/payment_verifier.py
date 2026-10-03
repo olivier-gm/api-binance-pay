@@ -100,6 +100,7 @@ class PaymentVerifier:
         claim_service: PaymentClaimService,
         case_insensitive_code: bool = False,
         amount_tolerance: Decimal = Decimal(0),
+        accept_overpayment: bool = False,
         clock_skew: timedelta = timedelta(minutes=5),
         clock: Callable[[], datetime] = utcnow,
     ) -> None:
@@ -107,6 +108,7 @@ class PaymentVerifier:
         self._claims = claim_service
         self._case_insensitive = case_insensitive_code
         self._tolerance = amount_tolerance
+        self._accept_overpayment = accept_overpayment
         self._skew = clock_skew
         self._clock = clock
 
@@ -181,7 +183,13 @@ class PaymentVerifier:
         if evidence.asset != asset:
             return result(VerificationStatus.ASSET_MISMATCH, **found)
         # 7. Amount: exact Decimal comparison unless an explicit tolerance is configured.
-        if abs(evidence.amount - request.expected_amount) > self._tolerance:
+        #    With accept_overpayment, any amount >= expected (minus tolerance) is accepted.
+        difference = evidence.amount - request.expected_amount
+        if self._accept_overpayment:
+            amount_ok = difference >= -self._tolerance
+        else:
+            amount_ok = abs(difference) <= self._tolerance
+        if not amount_ok:
             return result(VerificationStatus.AMOUNT_MISMATCH, **found)
         if evidence.status is not PaymentStatus.PAID:
             return result(
