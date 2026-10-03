@@ -113,6 +113,8 @@ class Settings(BaseSettings):
     payment_code_case_insensitive: bool = False
     # Explicit, opt-in absolute tolerance. 0 means exact match (the default).
     payment_amount_tolerance: str = "0"
+    # true: a payment GREATER than expected is also accepted (underpayment is still rejected).
+    payment_accept_overpayment: bool = False
 
     # ---------------------------------------------------------------------------------
     @field_validator(
