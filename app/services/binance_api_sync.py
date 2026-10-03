@@ -211,7 +211,7 @@ class BinanceApiSyncService:
                             tenant_id=tenant_id,
                             source=SOURCE,
                             external_id=tx.transaction_id,
-                            payment_code=self._normalize_code(tx.transaction_id),
+                            payment_code=self._normalize_code(tx.payment_code),
                             amount=tx.amount,
                             asset=tx.currency,
                             # Pay trade history only lists settled transfers.

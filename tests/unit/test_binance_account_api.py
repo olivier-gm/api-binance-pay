@@ -266,3 +266,18 @@ async def test_key_permissions_endpoint_is_signed() -> None:
     assert perms.read_only
     assert seen[0].url.path == "/sapi/v1/account/apiRestrictions"
     assert "signature=" in str(seen[0].url) and seen[0].headers["X-MBX-APIKEY"] == KEY
+
+ d e f   t e s t _ o r d e r _ i d _ i s _ t h e _ p a y m e n t _ c o d e ( )   - >   N o n e : 
+         i t e m   =   t x ( )   |   { " o r d e r I d " :   " 4 5 7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 " } 
+         p a r s e d   =   p a r s e _ t r a n s a c t i o n ( i t e m ) 
+         a s s e r t   p a r s e d . o r d e r _ i d   = =   " 4 5 7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 " 
+         a s s e r t   p a r s e d . p a y m e n t _ c o d e   = =   " 4 5 7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 " 
+         a s s e r t   p a r s e d . t r a n s a c t i o n _ i d   = =   " P _ A 9 9 T E S T P A Y X 7 1 1 1 6 " 
+ 
+ 
+ d e f   t e s t _ p a y m e n t _ c o d e _ f a l l s _ b a c k _ t o _ t r a n s a c t i o n _ i d ( )   - >   N o n e : 
+         p a r s e d   =   p a r s e _ t r a n s a c t i o n ( t x ( ) ) 
+         a s s e r t   p a r s e d . o r d e r _ i d   i s   N o n e 
+         a s s e r t   p a r s e d . p a y m e n t _ c o d e   = =   " P _ A 9 9 T E S T P A Y X 7 1 1 1 6 " 
+  
+ 

@@ -82,6 +82,7 @@ class FakeAccount:
         when: datetime | None = None,
         order_type: str = "C2C",
         payer: str | None = "User-0000aaaa",
+        order_id: str | None = None,
     ) -> None:
         self.transactions.append(
             PayTransaction(
@@ -92,6 +93,7 @@ class FakeAccount:
                 currency=currency,
                 payer_name=payer,
                 payer_binance_id=None,
+                order_id=order_id,
             )
         )
 

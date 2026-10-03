@@ -117,10 +117,16 @@ class PayTransaction:
     currency: str
     payer_name: str | None
     payer_binance_id: str | None
+    order_id: str | None = None  # "Order ID" shown to the payer in the Binance app
 
     @property
     def is_incoming(self) -> bool:
         return self.amount > 0
+
+    @property
+    def payment_code(self) -> str:
+        """What the payer quotes: the Order ID, falling back to the transactionId."""
+        return self.order_id or self.transaction_id
 
 
 def parse_transaction(item: dict[str, Any]) -> PayTransaction:
@@ -138,6 +144,7 @@ def parse_transaction(item: dict[str, Any]) -> PayTransaction:
     payer = item.get("payerInfo") or {}
     name = payer.get("name") if isinstance(payer, dict) else None
     binance_id = payer.get("binanceId") if isinstance(payer, dict) else None
+    order_id = str(item.get("orderId") or "").strip() or None
     return PayTransaction(
         order_type=order_type,
         transaction_id=transaction_id,
@@ -146,6 +153,7 @@ def parse_transaction(item: dict[str, Any]) -> PayTransaction:
         currency=currency,
         payer_name=str(name)[:128] if name else None,
         payer_binance_id=str(binance_id)[:64] if binance_id else None,
+        order_id=order_id[:64] if order_id else None,
     )
 
 
