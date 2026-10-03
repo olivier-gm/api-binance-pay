@@ -96,6 +96,7 @@ def build_container(
         claim_service=claim_service,
         case_insensitive_code=settings.payment_code_case_insensitive,
         amount_tolerance=settings.amount_tolerance,
+        accept_overpayment=settings.payment_accept_overpayment,
         clock_skew=timedelta(seconds=settings.payment_clock_skew_seconds),
     )
     return Container(
